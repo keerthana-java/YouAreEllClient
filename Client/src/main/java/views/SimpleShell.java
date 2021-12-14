@@ -9,6 +9,7 @@ import java.util.List;
 
 import controllers.IdController;
 import controllers.MessageController;
+import controllers.TransactionController;
 import youareell.YouAreEll;
 
 // Simple Shell is a Console view for youareell.YouAreEll.
@@ -21,11 +22,10 @@ public class SimpleShell {
     }
     public static void main(String[] args) throws java.io.IOException {
 
-        YouAreEll urll = new YouAreEll(new MessageController(), new IdController());
+        YouAreEll webber = new YouAreEll(new TransactionController(new MessageController(), new IdController()));
         
         String commandLine;
-        BufferedReader console = new BufferedReader
-                (new InputStreamReader(System.in));
+        BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 
         ProcessBuilder pb = new ProcessBuilder();
         List<String> history = new ArrayList<String>();
@@ -50,7 +50,7 @@ public class SimpleShell {
 
             //loop through to see if parsing worked
             for (int i = 0; i < commands.length; i++) {
-                //System.out.println(commands[i]); //***check to see if parsing/split worked***
+                System.out.println(commands[i]); //***check to see if parsing/split worked***
                 list.add(commands[i]);
 
             }
@@ -65,21 +65,55 @@ public class SimpleShell {
                 }
 
                 // Specific Commands.
-
-                // ids
-                if (list.contains("ids")) {
-                    String results = webber.get_ids();
-                    SimpleShell.prettyPrint(results);
-                    continue;
-                }
-
-                // messages
-                if (list.contains("messages")) {
-                    String results = webber.get_messages();
-                    SimpleShell.prettyPrint(results);
-                    continue;
-                }
                 // you need to add a bunch more.
+
+                for (String command : list) {
+                    // ids
+                    if (command.equals("ids")) {
+                        String results = webber.get_ids();
+                        SimpleShell.prettyPrint(results);
+                        continue;
+                    }
+
+                    // create id
+                    if (command.startsWith("create_id")) {
+                        String[] completeCommand = command.split("-");
+                        String results = webber.create_id(completeCommand[1], completeCommand[2]);
+                        SimpleShell.prettyPrint(results);
+                        continue;
+                    }
+
+                    // messages
+                    if (command.equals("messages")) {
+                        String results = webber.get_messages();
+                        SimpleShell.prettyPrint(results);
+                        continue;
+                    }
+
+                    // messages by id
+                    if (command.startsWith("messages_by_id")) {
+                        String[] completeCommand = command.split("~");
+                        String results = webber.get_messages_by_id(completeCommand[1]);
+                        SimpleShell.prettyPrint(results);
+                        continue;
+                    }
+
+                    // messages by sequence
+                    if (command.startsWith("messages_by_seq")) {
+                        String[] completeCommand = command.split("~");
+                        String results = webber.get_message_id_then_sequence(completeCommand[1], completeCommand[2]);
+                        SimpleShell.prettyPrint(results);
+                        continue;
+                    }
+
+                    // messages from id and to id
+                    if (command.startsWith("messages_from_to_id")) {
+                        String[] completeCommand = command.split("~");
+                        String results = webber.get_messages_to_id_from_id(completeCommand[1], completeCommand[2]);
+                        SimpleShell.prettyPrint(results);
+                        continue;
+                    }
+                }
 
                 //!! command returns the last command in history
                 if (list.get(list.size() - 1).equals("!!")) {
@@ -112,7 +146,8 @@ public class SimpleShell {
             }
 
             //catch ioexception, output appropriate message, resume waiting for input
-            catch (IOException e) {
+            catch (Exception e) {
+            //catch (IOException e) {
                 System.out.println("Input Error, Please try again!");
             }
             // So what, do you suppose, is the meaning of this comment?

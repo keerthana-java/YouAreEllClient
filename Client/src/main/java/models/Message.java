@@ -16,30 +16,35 @@ package models;
 public class Message implements Comparable {
 
     private String message = "";
-    private String toId = "";
-    private String fromId = "";
-    private String timestamp = "";
-    private String seqId = "";
+    private String toid = "";
+    private String fromid = "";
+    private String timestamp;
+    private String sequence;
 
-    public Message (String message, String fromId, String toId) {
-        this.message = message;
-        this.fromId = fromId;
-        this.toId = toId;
+    public Message() {
+
     }
 
-    public Message (String message, String fromId) {
+    public Message (String message, String fromid, String toid) {
+        this.sequence = "-";
         this.message = message;
-        this.fromId = fromId;
-        this.toId = "";
+        this.fromid = fromid;
+        this.toid = toid;
+    }
+
+    public Message (String message, String fromid) {
+        this.sequence = "-";
+        this.message = message;
+        this.fromid = fromid;
     }
 
     @Override
     public String toString() {
-        return "to: " + this.toId + "\nfrom: "+ this.fromId + "\n" + this.message + "\n----\n";
+        return "\nsequence: " + this.getSequence() + "\ntimestamp: " + this.getTimestamp() + "\nto: " + this.toid + "\nfrom: "+ this.fromid + "\n" + this.message + "\n----\n";
     }
 
     public int compareTo(Object o) {
-        return this.seqId.compareTo(((Message) o).getSeqId());
+        return this.sequence.compareTo(((Message) o).getSequence());
     }
 
     public String getMessage() {
@@ -50,27 +55,35 @@ public class Message implements Comparable {
         this.message = message;
     }
 
-    public String getToId() {
-        return toId;
+    public String getToid() {
+        return toid;
     }
 
-    public void setToId(String toId) {
-        this.toId = toId;
+    public void setToid(String toid) {
+        this.toid = toid;
     }
 
-    public String getFromId() {
-        return fromId;
+    public String getFromid() {
+        return fromid;
     }
 
-    public void setFromId(String fromId) {
-        this.fromId = fromId;
+    public void setFromid(String fromid) {
+        this.fromid = fromid;
     }
 
     public String getTimestamp() {
         return timestamp;
     }
 
-    public String getSeqId() {
-        return seqId;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
     }
 }
